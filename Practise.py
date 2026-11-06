@@ -1,6 +1,6 @@
 """
-app.py -- main Streamlit entry point for sammpad.ai
-Run with:  streamlit run app.py
+Practise.py -- main Streamlit entry point for Practise
+Run with:  streamlit run Practise.py
 AI provider / model / key are configured on the Settings page (pages/1_Settings.py).
 """
 import os
@@ -92,7 +92,7 @@ tab_chat, tab_pyq, tab_agent, tab_code, tab_teacher = st.tabs(
 
 # ============================= CHAT =============================
 with tab_chat:
-    st.subheader("Ask Practise anything about your CS syllabus")
+    st.subheader("Ask Saampad anything about your CS syllabus")
     st.caption("Conversations are saved for this anonymous session. Anyone with this page link can access them; don't share it or enter sensitive personal information.")
     new_chat_col, delete_chat_col = st.columns(2)
     if new_chat_col.button("Start a new conversation"):

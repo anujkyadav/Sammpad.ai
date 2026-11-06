@@ -7,7 +7,7 @@ Streamlit app: syllabus-restricted chat, PYQ practice (MCQ / Assertion-Reason qu
 pip install -e .
 export API_KEY_GROQ_ANUJ="..."      # default provider (model: openai/gpt-oss-20b)
 export API_KEY_GEMINI_ANUJ="..."    # optional (model: gemini-3.1-flash-lite)
-streamlit run app.py
+streamlit run Practise.py
 ```
 (Windows PowerShell: `$env:API_KEY_GROQ_ANUJ="..."`.) A `.env` file also works.
 
@@ -73,7 +73,7 @@ Upload a past-year paper or syllabus PDF, then explicitly select the active syll
 
 ## Folders
 ```
-app.py                 <- Streamlit entry point
+Practise.py            <- Streamlit entry point
 pages/                 <- Streamlit multipage screens
 src/saampad_ai/        <- application package and business logic
 train_classifier.py    <- classifier training command

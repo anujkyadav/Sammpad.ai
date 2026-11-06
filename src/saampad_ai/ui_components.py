@@ -1,4 +1,4 @@
-"""Streamlit rendering helpers shared by app.py and the Settings page."""
+"""Streamlit rendering helpers shared by Practise.py and the Settings page."""
 import re
 import streamlit as st
 
