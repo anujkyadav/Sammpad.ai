@@ -32,44 +32,50 @@
    the Docker-based executor described in `README.md`, then configure
    `CODE_EXECUTOR_URL` and `CODE_EXECUTOR_TOKEN`. Code execution stays disabled without it.
 
-## Issues from the earlier review that have been addressed
+## Earlier issues and how they were resolved
 
-- **Cluttered project root:** application modules are grouped under `src/saampad_ai/`;
-  Streamlit screens remain in `pages/`, and `Practise.py` is the entry point.
-- **Wrong syllabus could be selected by file date:** syllabus PDFs are uploaded to object
-  storage, explicitly selected as active, and validated before activation. The app no
-  longer chooses the newest local PDF automatically.
-- **Unsafe in-process code execution:** the Streamlit app no longer executes submitted
-  Python with `exec`. It can send code to a separate executor that runs each job in a
-  disposable Docker container with network access disabled and CPU, memory, process,
-  time, and output limits. The runner is off until configured.
-- **Question-bank data integrity and concurrent writes:** questions are validated before
-  storage, saved in Postgres using database transactions, and duplicate question text is
-  skipped by a database uniqueness constraint.
-- **Upload overwrites and size handling:** uploads use generated unique object keys, and
-  Streamlit's configured upload limit is 20 MB.
-- **Non-persistent chat and practice history:** chat messages and quiz attempts are stored
-  in Neon Postgres and can be restored for the same anonymous session.
-- **Local-only runtime data:** question and session records use Neon Postgres; uploaded
-  files and the classifier artifact use Neon Object Storage.
-- **Hard-to-read UI and exposed implementation details:** the app uses a consistent dark
-  theme with legible text and controls, and user-facing errors avoid showing raw
-  tracebacks or internal storage paths.
-- **Settings and uploads mixed together:** API provider/model settings are on **Settings**;
-  file management is on **Uploads**.
-- **Generic Streamlit sidebar label:** the main entry point is named `Practise.py`, so
-  Streamlit displays **Practise** in its default page navigation.
+- **Cluttered project root** — Application modules were moved into `src/saampad_ai/`;
+  Streamlit pages remain in `pages/`. The root entry point is `Practise.py`.
+- **Wrong syllabus selected based on file modification time** — Syllabus PDFs are stored
+  in object storage. A user selects the active syllabus in **Uploads**, and the app checks
+  the PDF before activating it. The app no longer picks the newest local PDF automatically.
+- **Unsafe in-process execution of submitted Python** — The app no longer uses `exec` to
+  run student code. It sends code to a separately deployed executor, which starts a
+  disposable Docker container with no network, a read-only root filesystem, a non-root
+  user, and CPU, memory, process, time, and output limits. Execution remains disabled
+  unless the executor URL and token are configured.
+- **Question-bank writes could lose updates or count duplicates incorrectly** — Question
+  rows are validated and saved to Postgres inside database transactions. A unique database
+  constraint on question text and `ON CONFLICT DO NOTHING` handle duplicate writes safely.
+- **Uploads could overwrite objects and had no configured size cap** — Uploads receive
+  generated unique object keys. Streamlit's configured upload limit is 20 MB.
+- **Chat and quiz history disappeared when a browser session ended** — Chat messages and
+  quiz attempts are persisted in Neon Postgres and reloaded using an anonymous UUID session
+  identifier.
+- **Runtime data depended on local files** — Question and session records use Neon
+  Postgres. Uploaded documents and the classifier artifact use Neon Object Storage.
+- **UI text and errors were hard to read or exposed implementation details** — A shared
+  dark theme sets the page, sidebar, text, input, and button colors. User-facing failure
+  messages are generic while detailed diagnostics go to server logs.
+- **Settings and uploads shared one screen** — AI provider, model, and API key controls
+  are on **Settings**; file management is on **Uploads**.
+- **The sidebar displayed the generic name `app`** — The Streamlit entry point was renamed
+  to `Practise.py`, which gives the default navigation item the product name.
 
 ## Remaining deployment considerations
 
+- **GitHub organization OAuth approval is a deployment prerequisite, not a code fix.**
+  The `saampad-ai` organization must approve Streamlit's OAuth app under its GitHub
+  organization settings. Approve Streamlit specifically if possible; disabling the
+  organization's OAuth restrictions grants broader access.
 - Sessions are anonymous and identified through IDs in the page URL. Anyone who has a
   session link can access that session; there is no account-based authentication yet.
   Avoid entering sensitive personal information or sharing session links.
 - The Docker executor is a separate service and is not started by Streamlit Community
-  Cloud. Docker containers share the host kernel; the executor host should be isolated
-  from the app and database. See `README.md` for its deployment requirements.
+  Cloud. Docker containers share the host kernel; isolate the executor host from the app
+  and database. See `README.md` for its deployment requirements.
 - The app requires valid Neon database and object-storage credentials at startup; it does
   not fall back to local storage.
-- Python input validation and container resource limits reduce risk but do not guarantee
-  complete isolation. Higher-risk public execution may require a stronger runtime such as
-  gVisor or Kata Containers.
+- Input validation and container resource limits reduce execution risk but do not
+  guarantee complete isolation. Higher-risk public execution may need a stronger runtime
+  such as gVisor or Kata Containers.
