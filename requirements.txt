@@ -1,0 +1,14 @@
+streamlit>=1.37.0
+pandas>=2.2.0
+numpy>=1.26.0
+scikit-learn>=1.4.0
+sentence-transformers>=3.0.0
+joblib>=1.3.0
+
+# AI backends (install the ones you plan to use; all three are optional)
+groq>=0.9.0
+google-generativeai>=0.7.0
+anthropic>=0.34.0
+
+python-dotenv>=1.0.0
+pypdf>=4.2.0

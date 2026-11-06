@@ -1,0 +1,293 @@
+year,topic,subtopic,question_type,question_text,marks,answer
+2023,Python Functions,Scope,MCQ,"What will be the output of: def f(x): x += 1; return x; a = 5; print(f(a), a)",1,6 5
+2023,Stacks,Push/Pop,Fix-the-Code,"Correct the following stack push function using a list: def push(stack, item): stack.append(item) return stack -- identify and fix the logical error if the function is supposed to return nothing.",2,Remove the return statement; append() already modifies the list in place.
+2024,SQL,Aggregate Functions,Output-Prediction,"Given table EMP(EName, Salary): Predict the output of SELECT COUNT(*), MAX(Salary) FROM EMP WHERE Salary > 20000;",2,Depends on data; count of rows and max salary where Salary > 20000.
+2024,Computer Networks,Topologies,Case-Study,"A school has 4 buildings 200m apart needing a reliable, cost-effective network. Suggest a suitable topology and the networking device required at each building.",4,"Star topology with switches at each building, connected via a backbone; suggest optical fiber for inter-building links."
+2022,Python Basics,Data Types,MCQ,Which of the following is a mutable data type in Python? (a) tuple (b) string (c) list (d) int,1,(c) list
+2023,Python Functions,Default Arguments,Assertion-Reason,Assertion (A): Default argument values are evaluated once at function definition. Reason (R): Mutable default arguments can cause unexpected behavior across function calls. Choose the correct option.,1,"Both A and R are true, and R is the correct explanation of A."
+2024,Stacks,Implementation,Fix-the-Code,def pop(stack): if stack == []: print('Stack empty') else: return stack.pop(0) -- identify why this is NOT a correct stack pop operation.,2,"stack.pop(0) removes from the front (FIFO), not the top; should be stack.pop() or stack.pop(-1) for correct LIFO behavior."
+2022,SQL,Joins,Output-Prediction,"Given two tables STUDENT and MARKS with common column RollNo, predict the output of a SELECT using an INNER JOIN with WHERE Marks > 80.",3,Rows from both tables where RollNo matches and Marks > 80.
+2023,Computer Networks,Protocols,MCQ,Which protocol is used to transfer files between a client and server? (a) HTTP (b) FTP (c) SMTP (d) TCP,1,(b) FTP
+2024,Python Functions,Recursion,Output-Prediction,def fact(n): if n==0: return 1 else: return n*fact(n-1); print(fact(4)),2,24
+2022,Computer Networks,Devices,MCQ,Which device is used to connect two different networks and operates at the Network layer? (a) Switch (b) Hub (c) Router (d) Repeater,1,(c) Router
+2023,SQL,DDL-DML,Fix-the-Code,Identify the error: UPDATE STUDENT SET Marks = 90 WHERE RollNo = 5 (missing semicolon and no issue otherwise) -- is this syntactically valid in MySQL CLI?,2,Missing semicolon at the end of the SQL statement.
+2026,Python Basics,Data Types,MCQ,"State True or False: In Python, data type of 74 is same as the data type of 74.0.",1,"False -- 74 is int, 74.0 is float; different data types."
+2026,Python Strings,String Methods,MCQ,"Identify the output: s = ""the Truth""; print(s.capitalize()) -- (A) The truth (B) THE TRUTH (C) The Truth (D) the Truth",1,"(A) The truth -- capitalize() makes only the first character uppercase, rest lowercase."
+2026,Python Basics,Operators,MCQ,Which of the following expressions in Python evaluates to True? (A) 2>3 and 2<3 (B) 3>1 and 2 (C) 3>1 and 3>2 (D) 3>1 and 3<2,1,"(C) 3>1 and 3>2 -- evaluates to the boolean literal True; (B) evaluates to 2 (truthy but not literal True), (A) and (D) are False."
+2026,Python Strings,String Methods,MCQ,"What is the output? s='War and Peace by Leo Tolstoy'; print(s.partition(""by"")) -- (A) ('War and Peace ', 'by', ' Leo Tolstoy') (B) [...] list form (C)/(D) 2-tuple forms",1,"(A) ('War and Peace ', 'by', ' Leo Tolstoy') -- partition() always returns a 3-element tuple: (before, separator, after)."
+2026,Python Strings,Slicing,Output-Prediction,"What will be the output? print(""PythonProgram""[-1:2:-2])",1,mroPo
+2026,Python Tuples,Concatenation,MCQ,"What is the output? t = tuple('tuple'); t2 = t[2],; t += t2; print(t) -- (A) ('tuple') (B) ('tuple','p') (C) ('t','u','p','l','e','p') (D) ('t','u','p','l','e')",1,"(C) ('t', 'u', 'p', 'l', 'e', 'p')"
+2026,Python Dictionaries,Keys,MCQ,Which of the following statements is true about dictionaries in Python? (A) sequence datatype (B) cannot have two elements with same key (C) cannot have two elements with same value (D) key and value cannot be same,1,(B) A dictionary cannot have two elements with the same key.
+2026,Python Lists,Exceptions,MCQ,"If L is a list with 6 elements, which statement raises an exception? (A) L.pop(1) (B) L.pop(6) (C) L.insert(1,6) (D) L.insert(6,1)",1,"(B) L.pop(6) -- valid indices are 0-5, so pop(6) raises IndexError; insert() never raises since it can insert beyond the list length."
+2026,Python Functions,Default Parameters,Output-Prediction,"What will be the output? def f1(a,b=1): print(a+b,end='-'); c=f1(1,2); print(c,sep='*') -- (A) 3-2 (B) 3-2* (C) 3-None (D) 3*None-",1,"(C) 3-None -- f1(1,2) prints '3-' then returns None (no return statement), so print(None) prints 'None'."
+2026,File Handling,File Modes,MCQ,"Consider: f1 = open(""pqr.dat"",""________"") -- correct mode to open the file in read-only (binary) mode -- (A) a (B) rb (C) r+ (D) rb+",1,(B) rb -- read-only binary mode.
+2026,Exception Handling,try-except-finally,MCQ,"State True or False: In Python, Logical errors can be handled using try...except...finally statement.",1,"False -- try-except only catches runtime exceptions, not logical errors (which produce wrong results without crashing)."
+2026,SQL,Keys,MCQ,"A table has two candidate keys, one of which is chosen as the primary key. How many alternate keys does this table have? (A) 0 (B) 1 (C) 2 (D) 3",1,(B) 1 -- the non-chosen candidate key becomes the alternate key.
+2026,SQL,DDL,MCQ,Which SQL command can change the degree of the existing relation? (A) DROP TABLE (B) ALTER TABLE (C) UPDATE...SET (D) DELETE,1,(B) ALTER TABLE -- degree = number of attributes/columns; ALTER TABLE can add/remove columns.
+2026,SQL,Queries,MCQ,"What will be the output of: SELECT MACHINE_ID, MACHINE_NAME FROM INVENTORY WHERE QUANTITY <= 100; -- (A)-(D) options about which rows/columns",1,(D) ID and name of machines with quantity less than or equal to 100 from INVENTORY table.
+2026,SQL,Cardinality,MCQ,"A relation in MySQL has 2 tuples and 3 attributes. If 2 attributes are deleted and 4 tuples are added, what is the cardinality? (A) 4 (B) 5 (C) 6 (D) 7",1,(C) 6 -- cardinality = number of tuples (rows); deleting attributes doesn't affect it. 2 + 4 = 6.
+2026,SQL,Aggregate Functions,MCQ,Which aggregate function in SQL returns the smallest value from a column? (A) MIN() (B) MAX() (C) SMALL() (D) LOWER(),1,(A) MIN()
+2026,Computer Networks,Terminology,MCQ,What is the correct expanded form of RJ 45? (A) Radio Jockey 45 (B) Registered Jockey 45 (C) Radio Jack 45 (D) Registered Jack 45,1,(D) Registered Jack 45
+2026,Computer Networks,Devices,MCQ,"Which network device serves as the entry and exit point of a network, as all data must pass through it to use routing paths? (A) Modem (B) Gateway (C) Switch (D) Repeater",1,(B) Gateway
+2026,Computer Networks,Terminology,Short-Answer,Expand the term XML.,1,Extensible Markup Language
+2026,Python Basics,Type Errors,Assertion-Reason,"Assertion (A): [1,2,3]+'123' is an invalid expression in Python. Reason (R): In Python, a list cannot be concatenated with a string. Choose the correct option (A)-(D).",1,"(A) Both A and R are true, and R is the correct explanation of A."
+2026,SQL,Keys,Assertion-Reason,Assertion (A): The PRIMARY KEY constraint in SQL ensures that each value in the column(s) is unique and cannot be NULL. Reason (R): Candidate keys are not eligible to become a primary key. Choose the correct option (A)-(D).,1,"(C) Assertion (A) is true, but Reason (R) is false -- candidate keys ARE eligible to become the primary key; one of them is chosen as such."
+2026,Python Functions,Default vs Positional Parameters,Short-Answer,What is the difference between default parameters and positional parameters in Python? Also give an example of a function header which uses both.,2,"Positional parameters are matched to arguments strictly by their order/position in the call and must be supplied. Default parameters have a pre-assigned value in the function definition, used automatically if the caller omits that argument. Example: def func(a, b=10): -- here 'a' is positional, 'b' is a default parameter."
+2026,Python Lists,Built-in Functions,Short-Answer,"Write Python statements (using built-in functions/methods only): (i) create a new list L1 containing elements of list L in ascending order, without modifying L. (ii) check whether character ch is an alphabet or a number.",2,(i) L1 = sorted(L)  (ii) print(ch.isalnum())
+2026,Python Dictionaries,Dictionary Methods,Short-Answer,"Assuming D1 is a dictionary: (i)(a) check if key 'RNo' is present in D1 OR (b) check if any key in D1 has value 12. (ii)(a) add key:value 'RNo':12 if not present, else return its value, using a built-in function OR (b) delete all elements from D1.",2,"(i)(a) 'RNo' in D1   (ii)(a) D1.setdefault('RNo', 12)   [alternates: (i)(b) 12 in D1.values()  (ii)(b) D1.clear()]"
+2026,Python Basics,Random Module,Output-Prediction,"What possible output from the given options will NOT be displayed, and for how many iterations does the for loop run? import random; a=[1,2,3,4,5,6]; for i in range(4): j=random.randrange(i,5); print(a[j],end='-') -- options (A) 3-4-5-4- (B) 2-2-4-5- (C) 4-3-3-5- (D) 5-1-2-4-",2,"(D) 5-1-2-4- will NOT be displayed -- for i=1, randrange(1,5) can only give j in {1,2,3,4}, so a[j] can only be 2,3,4,5 -- never 1 (which needs j=0, impossible when i=1). The loop runs for exactly 4 iterations (range(4))."
+2026,Python Functions,Debugging,Fix-the-Code,"Rewrite after removing all logical and syntax errors, underlining corrections:
+def CountVowels(s):
+    c=0
+    for ch in range(s):
+        if 'aeiouAEIOU' in ch:
+            c=+1
+    return(ch)",2,"def CountVowels(s):
+    c=0
+    for ch in s:              # corrected: range(s) -> s
+        if ch in 'aeiouAEIOU':  # corrected: operands reversed
+            c+=1               # corrected: c=+1 -> c+=1
+    return(c)                 # corrected: return ch -> return c"
+2026,SQL,DDL,Short-Answer,"Ms. Zoya wants a table W_STOCK with W_Code CHAR(5) [primary key], W_Description VARCHAR(20), B_Qty INTEGER, U_Price FLOAT. (i)(a) Write SQL to create this table OR (b) Can U_Price be the primary key? Justify. (ii)(a) Write SQL to add column E_Date (DATE type) OR (b) Write SQL to remove column B_Qty.",2,"(i)(a) CREATE TABLE W_STOCK (W_Code CHAR(5) PRIMARY KEY, W_Description VARCHAR(20), B_Qty INTEGER, U_Price FLOAT);   (i)(b) No -- U_Price can repeat across rows and primary key values must be unique.   (ii)(a) ALTER TABLE W_STOCK ADD E_Date DATE;   (ii)(b) ALTER TABLE W_STOCK DROP COLUMN B_Qty;"
+2026,Computer Networks,Topologies,Short-Answer,(a) List one advantage and one disadvantage of Bus topology. OR (b) What is a protocol in computer networks? Which protocol transmits hypertext across the web?,2,"(a) Advantage: requires less cable, easy and cheap to install. Disadvantage: if the main backbone cable fails, the entire network goes down.   (b) A protocol is a set of rules that governs communication between devices on a network. HTTP (HyperText Transfer Protocol) is used to transmit hypertext across the web."
+2026,File Handling,Text Files,Short-Answer,"(a) Write a Python function that counts and returns the number of digits appearing in the text file ""Space.txt"". (Expected return value: 11.) OR (b) Write a function that displays words in which the lowercase letter 'e' appears at least twice in ""Space.txt"".",3,"(a) def CountDigits():
+    f = open(""Space.txt"", ""r"")
+    data = f.read()
+    count = sum(1 for ch in data if ch.isdigit())
+    f.close()
+    return count
+# Verified: returns 11 for the given sample text (digits in '1969', '400', '2030')."
+2026,Stacks,Stack Implementation with Dictionaries,Long-Answer,"A stack FruitStack (list) holds fruit records as dicts, e.g. {'Name':'Apple','Origin':'France','Price':120,'Expiry':'12-08-2025'}. Write: (i) push_fruit(FruitStack, Fruit) -- pushes Fruit onto FruitStack only if Price < 100. (ii) pop_fruit(FruitStack) -- pops and returns topmost record, or displays ""UNDERFLOW"" if empty. (iii) display(FruitStack) -- displays all elements from topmost, or 'EMPTY STACK' if empty.
+OR (b) Accept 10 integers; push three-digit even integers onto a stack; then pop and display all of them.",3,"def push_fruit(FruitStack, Fruit):
+    if Fruit['Price'] < 100:
+        FruitStack.append(Fruit)
+
+def pop_fruit(FruitStack):
+    if len(FruitStack) == 0:
+        print(""UNDERFLOW"")
+    else:
+        return FruitStack.pop()
+
+def display(FruitStack):
+    if len(FruitStack) == 0:
+        print(""EMPTY STACK"")
+    else:
+        for i in range(len(FruitStack)-1, -1, -1):
+            print(FruitStack[i])"
+2026,Python Functions,List/String Manipulation Trace,Output-Prediction,"Write the output: def Exam2026(given): new=[]; for ch in given[1:-1]: if ch.isupper(): new.reverse(); elif ch not in new: new.append(ch); elif ch in new: new.pop(); print(new)
+Exam2026(""Gold-24Medals"")
+OR (b) def Exam2026(given): new=0; while given: if new%2: new+=given%10; else: new+=given%5; print(new,end='-'); given//=10
+Exam2026(123456)",3,"(a) ['4', '2', '-', 'd', 'l', 'o']
+(b) 1-6-10-13-15-16-
+(Both verified by direct execution.)"
+2026,SQL,Queries and Output Prediction,Long-Answer,"Table STOCK (Code,Type,Volume,Qty,Price) with 6 rows given (milk products). (a) Write SQL for: (i) Type and max Price per Type (ii) increase Price by 0.5 where Type='F' (iii) total value of stock (sum of Qty*Price) (iv) all records where Code starts with 'A'.
+OR (b) Predict output of 4 given SELECT queries on the same table.",4,"(a)(i) SELECT Type, MAX(Price) FROM STOCK GROUP BY Type;
+(a)(ii) UPDATE STOCK SET Price = Price + 0.5 WHERE Type = 'F';
+(a)(iii) SELECT SUM(Qty*Price) FROM STOCK;
+(a)(iv) SELECT * FROM STOCK WHERE Code LIKE 'A%';
+(b)(i) [(0.5,300,38.0),(0.5,250,36.5),(1.0,50,52.0)]
+(b)(ii) [('AF0.5',300),('MF0.5',250),('PT0.5',78)]
+(b)(iii) [('F',),('T',),('D',)]
+(b)(iv) [(0.5,3),(1.0,3)]
+(All (b) outputs verified by executing the actual queries against the given table data.)"
+2026,File Handling,CSV,Long-Answer,"A CSV file ""States.csv"" has records [Name, Capital, Population, Language]. Write a Python program that reads the data and appends all records where population > 10000000 into another CSV file 'More.csv'. Note: do NOT copy the header row.",4,"import csv
+with open(""States.csv"", ""r"", newline="""") as f1:
+    reader = csv.reader(f1)
+    next(reader)  # skip header
+    with open(""More.csv"", ""a"", newline="""") as f2:
+        writer = csv.writer(f2)
+        for row in reader:
+            if int(row[2]) > 10000000:
+                writer.writerow(row)"
+2026,SQL,Joins and Aggregates,Long-Answer,"Tables CUSTOMERS(C_ID,C_Name,Phone) and LOANS(SNo,C_ID,L_Amt,L_Date,Terms,RoI) with sample data given. Write queries for: (i) count of LOANS records with RoI above 7.0 (ii) names of customers with L_Amt above 1000000 (iii) C_ID, C_Name, Terms where L_Date is after 31 Dec 2024 (iv)(a) all loan details in descending RoI order OR (b) C_ID and average Terms per C_ID.",4,"(i) SELECT COUNT(*) FROM LOANS WHERE RoI > 7.0;
+(ii) SELECT C_Name FROM CUSTOMERS WHERE C_ID IN (SELECT C_ID FROM LOANS WHERE L_Amt > 1000000);
+(iii) SELECT L.C_ID, C.C_Name, L.Terms FROM LOANS L, CUSTOMERS C WHERE L.C_ID=C.C_ID AND L_Date > '2024-12-31';
+(iv)(a) SELECT * FROM LOANS ORDER BY RoI DESC;
+(iv)(b) SELECT C_ID, AVG(Terms) FROM LOANS GROUP BY C_ID;"
+2026,Python-SQL Connectivity,MySQL via Python,Long-Answer,"Table Account in database SCHOOL: Stud_id (int), Sname (string), Class (string), Fees (float). Write a Python program to display records where Fees < 5000. Connection: Username=admin, Password=root, Host=localhost.",4,"import mysql.connector as sql
+conn = sql.connect(host=""localhost"", user=""admin"", password=""root"", database=""SCHOOL"")
+cursor = conn.cursor()
+cursor.execute(""SELECT * FROM Account WHERE Fees < 5000"")
+for row in cursor.fetchall():
+    print(row)
+conn.close()"
+2026,File Handling,Binary Files,Long-Answer,"Binary file RESOURCES.DAT stores tuples (R_ID, R_Name, R_Expertise, Charges), e.g. (12,'P. Velusami','Machine Learning',5000). Write: (i) Append() -- input a Resource Person's data and write it to the file. (ii) Update() -- increase Charges of every resource person by 500.",5,"import pickle
+def Append():
+    f = open(""RESOURCES.DAT"", ""ab"")
+    r_id = int(input(""R_ID: ""))
+    r_name = input(""R_Name: "")
+    r_expertise = input(""R_Expertise: "")
+    charges = float(input(""Charges: ""))
+    pickle.dump((r_id, r_name, r_expertise, charges), f)
+    f.close()
+
+def Update():
+    records = []
+    f = open(""RESOURCES.DAT"", ""rb"")
+    try:
+        while True:
+            rec = pickle.load(f)
+            records.append((rec[0], rec[1], rec[2], rec[3]+500))
+    except EOFError:
+        pass
+    f.close()
+    f = open(""RESOURCES.DAT"", ""wb"")
+    for rec in records:
+        pickle.dump(rec, f)
+    f.close()"
+2026,Computer Networks,Network Design Case Study,Case-Study,"Sanjeevani University (Amritsar campus): 4 blocks ADMIN(25 PCs), ACADEMIC(600 PCs), HOSTEL(120 PCs), SPORTS(50 PCs). Block distances: ADMIN-ACADEMIC 60m, ADMIN-HOSTEL 160m, ADMIN-SPORTS 80m, ACADEMIC-HOSTEL 40m, ACADEMIC-SPORTS 120m, HOSTEL-SPORTS 150m. HQ in Hyderabad, 2000km away. (i) Best server location, justify. (ii) Cable layout to connect blocks. (iii) Two wired media for intra-block connections. (iv) Communication medium used by FM (Radio/Micro/Infrared waves). (v)(a) Protocol for audio-visual online sessions OR (b) Where to install a repeater, justify.",5,"(i) ACADEMIC block -- it has by far the most computers (600) and is centrally positioned with the shortest distances to the other blocks (40m to HOSTEL, 60m to ADMIN, 120m to SPORTS), minimizing cable length and latency for the majority of users.
+(ii) Star topology centered at ACADEMIC: ACADEMIC-ADMIN, ACADEMIC-HOSTEL, ACADEMIC-SPORTS direct links (or a hybrid/star-of-stars with a switch in each block connected back to the server at ACADEMIC).
+(iii) Twisted pair (UTP/Ethernet) cable and Coaxial cable (or Optical Fiber).
+(iv) Radio Waves.
+(v)(a) VoIP (Voice over Internet Protocol).
+(v)(b) Install a repeater on the ADMIN-HOSTEL link (160m, the longest inter-block distance) to boost/regenerate the signal before it weakens over that distance."
+2026,Python Basics,Keywords,MCQ,Which of the following is a keyword in Python? (A) Break (B) None (C) For (D) Class,1,"(B) None -- Python keywords are case-sensitive; 'break', 'for', 'class' are the actual keywords (lowercase), not the capitalized forms shown. 'None' is itself a genuine keyword/constant, written exactly as capitalized."
+2026,Python Basics,Operators,Output-Prediction,What will be the output? print(18/3 == 18//3),1,True -- 18/3 = 6.0 and 18//3 = 6; 6.0 == 6 is True.
+2026,Python Dictionaries,Membership,Output-Prediction,"What will be the output? D={""A"":""MUMBAI"", ""B"":""CHENNAI""}; print(""C"" in D)",1,False -- 'in' checks dictionary keys by default; 'C' is not a key.
+2026,Exception Handling,try-except,Output-Prediction,"What will be the output? try: num=5; text=""15""; result=str(num)+text; print(result) except: print(""Error"")",1,"515 -- str(5) + '15' = '5'+'15' = '515' (string concatenation, not numeric addition)."
+2026,Python Basics,print() formatting,Output-Prediction,"What will be the output? print(""X""* 2,""Y"",end = 2 * ""X"", sep = ""#"")",1,XX#YXX -- 'X'*2='XX'; args joined by sep='#' gives 'XX#Y'; end='XX' (instead of newline) is appended: 'XX#YXX'.
+2026,Python Lists,List Concatenation,MCQ,"If L is an empty list, which of the following expressions is invalid? (A) L +'Hello' (B) L + [] (C) L + [2] (D) L * 2",1,(A) L + 'Hello' -- TypeError: cannot concatenate a list with a string directly; the others are all valid.
+2026,Python Strings,Slicing,MCQ,"Which statement returns the substring ""STR"" (first 3 characters) from ""STRING""? (A) ""STRING""[:-3] (B) ""STRING""[-3::-1] (C) ""STRING""[3:] (D) ""STRING"".startswith(3)",1,"(A) ""STRING""[:-3] -- returns 'STR'. (B) gives 'IRTS', (C) gives 'ING', (D) raises a TypeError."
+2026,Python Dictionaries,dict.fromkeys,Output-Prediction,"What will be the output? K=('A','B'); V='TEST'; D = dict.fromkeys(K, V); print(D)",1,"{'A': 'TEST', 'B': 'TEST'} -- fromkeys() maps every given key to the SAME value V."
+2026,Python Dictionaries,clear(),MCQ,"Which of the following is true about clear() in Python? (A) deletes the dictionary itself (B) deletes all items, resulting in an empty dictionary (C) clear(D) is correct syntax (D) no such method exists",1,"(B) It deletes all items of the dictionary, resulting in an empty dictionary -- the dictionary object itself still exists."
+2026,Python Lists,extend(),Output-Prediction,"What will be the output? L = [""A"", ""B""]; S=['C','D']; L.extend(S); print(L)",1,"['A', 'B', 'C', 'D'] -- extend() adds each element of S individually (unlike append(), which would add S as one nested list)."
+2026,File Handling,Binary Files,MCQ,Correct mode to open a binary pickled file to ADD more data to an existing file: (A) 'rb' (B) 'ab' (C) 'w' (D) 'r',1,"(B) 'ab' -- append binary mode, preserves existing content and adds new data at the end."
+2026,SQL,Constraints,MCQ,"State True or False: In SQL, the UNIQUE constraint on an attribute ensures that values in it are not left empty.",1,False -- UNIQUE ensures all non-null values are distinct; it does NOT prevent empty/NULL values (that is the job of NOT NULL).
+2026,SQL,Cartesian Product,MCQ,The degree of the resulting relation after the Cartesian Product of two SQL tables with degrees A and B will be: (A) A*B (B) A+B (C) A-B (D) A/B,1,"(B) A + B -- degree (number of columns) of a Cartesian product is the sum of the two tables' degrees (cardinality/row-count multiplies, degree adds)."
+2026,SQL,Fundamentals,MCQ,Which of the following is NOT true about SQL? (A) SQL is case sensitive (B) An SQL statement always ends with a colon (:) (C) SQL stands for Structured Query Language (D) SQL retrieves data from tables through queries,1,"(B) An SQL statement always ends with a colon -- false; SQL statements end with a semicolon (;), not a colon."
+2026,SQL,DDL,MCQ,Which of the following is used to add a primary key to a column in a table already created in MySQL? (A) INSERT (B) MODIFY (C) UPDATE (D) ALTER,1,(D) ALTER -- e.g. ALTER TABLE ... ADD PRIMARY KEY (column);
+2026,SQL,Operators,MCQ,Which MySQL operator is used with WHERE and returns True if the value belongs to a specified set of values? (A) DISTINCT (B) IN (C) LIKE (D) NOT,1,(B) IN
+2026,Computer Networks,Transmission Media,MCQ,Which networking medium is uni-directional and most appropriate for long-distance wireless communication? (A) Radio waves (B) Infrared (C) Bluetooth (D) Microwaves,1,"(D) Microwaves -- travel in a straight, focused (unidirectional) line-of-sight beam, well-suited for long-distance point-to-point and satellite communication."
+2026,Computer Networks,Protocols,MCQ,Which is the correct protocol used for accessing a web page? (A) HTTP (B) FTP (C) VoIP (D) SMTP,1,(A) HTTP
+2026,Computer Networks,XML,MCQ,Which is true about XML? (A) full form is Expert Manipulating Language (B) it is a programming language (C) a dynamic language used to store and transport data through web pages (D) same as HTML,1,"(C) It is a (markup) language used to store and transport data through web pages -- note: XML actually stands for eXtensible Markup Language, not a 'programming language'; option (C) is the CBSE-intended answer describing its purpose."
+2026,Python Strings,upper() and Mutability,Assertion-Reason,Assertion (A): upper() returns the string with all lowercase letters converted to uppercase. Reason (R): Strings are mutable objects in Python. Choose the correct option.,1,"(C) Assertion (A) is true, but Reason (R) is false -- strings in Python are IMMUTABLE, not mutable."
+2026,SQL,Foreign Keys,Assertion-Reason,"Assertion (A): If we define an attribute as a Foreign Key, UNIQUE and NOT NULL constraints are automatically applied to it. Reason (R): A table's Foreign Key column takes its values from another table's Primary Key. Choose the correct option.",1,"(D) Assertion (A) is false, but Reason (R) is true -- Foreign keys do NOT automatically get UNIQUE/NOT NULL constraints (they can repeat and can be NULL); Reason (R) correctly describes what a foreign key is."
+2026,Python Strings,find() vs index(),Short-Answer,Differentiate between find() and index() with respect to strings in Python. Give supporting examples for both.,2,"find() returns -1 if the substring is not found (no error). index() raises a ValueError if the substring is not found. Example: ""hello"".find(""z"") -> -1 ; ""hello"".index(""z"") -> raises ValueError."
+2026,Python Functions,Default Parameters,Short-Answer,What are default parameters in Python functions? Explain with the help of an example.,2,"A default parameter is assigned a value in the function definition itself, used automatically when the caller does not supply that argument. Example: def func(a, b=5): print(a+b) -- calling func(10) uses b=5 by default."
+2026,Python Tuples,Built-ins,Short-Answer,"(I) PRICE = (100, 55, 72, 65, 85, 90). (a) single-line statement to display PRICE contents in ascending order OR (b) single-line statement to find and display the average of PRICE. (II)(a) replace every 'i' in a string S with '_' using built-ins OR (b) delete the first occurrence of element 25 from list myList.",2,"(I)(a) print(sorted(PRICE))   (I)(b) print(sum(PRICE)/len(PRICE))   (II)(a) print(S.replace('i','_'))   (II)(b) myList.remove(25)"
+2026,Python Basics,Random Module Reasoning,Output-Prediction,"What possible output from the given options is EXPECTED, justify: import random; ITEMS={1:""PEN"",2:""ERASER"",3:""PENCIL""}; for i in range(len(ITEMS)): print(ITEMS[random.randint(0,i)+1],end=""*"") -- options (A) PEN*PENCIL*PENCIL* (B) PENCIL*PEN*ERASER* (C) PEN*PENCIL*ERASER* (D) PEN*ERASER*PEN*",2,"(D) PEN*ERASER*PEN* -- the first iteration (i=0) always gives randint(0,0)=0, so position 1 is ALWAYS 'PEN' (ruling out B). Position 2 (i=1) can only be 'PEN' or 'ERASER' (randint(0,1)+1 in {1,2}), ruling out 'PENCIL' there (eliminating A and C). Only (D) satisfies all positions."
+2026,Python Functions,Debugging (Skip-Not-Break),Fix-the-Code,"Rewrite after removing all errors, underline corrections. Code intended to display all numbers NOT divisible by 7:
+define display(L):
+ for i in range(0,len(L))
+ if i % 7 = = 0:
+ break
+ else:
+ print(L[i])
+numbers = [11,21,33,42,55]
+display(numbers)",2,"def display(L):                    # corrected: define -> def
+    for i in range(0,len(L)):       # corrected: added missing colon
+        if L[i] % 7 == 0:           # corrected: i%7 -> L[i]%7 (checking VALUE not index); '= =' -> '=='
+            continue                # corrected: break -> continue (skip this one, don't stop the whole loop)
+        else:
+            print(L[i])
+numbers = [11,21,33,42,55]
+display(numbers)
+# Verified output: 11, 33, 55 (21 and 42 are divisible by 7 and correctly skipped)."
+2026,SQL,Foreign Keys,Short-Answer,"EcoHarvest: PLANTINGS(PlantingID,CropType,PlantingDate,FieldLocation), HARVESTS(HarvestID,PlantingID,YieldQuantity,YieldQuality,HarvestDate). (I)(a) which attribute should be the FOREIGN KEY joining the tables OR (b) which constraint on HarvestID uniquely identifies each record. (II)(a) SQL to change FieldLocation to 'North Field 3' for PlantingID='PL005' OR (b) SQL to display HARVESTS records with YieldQuality='excellent'.",2,"(I)(a) PlantingID (the common attribute, primary key in PLANTINGS, referenced in HARVESTS).   (I)(b) PRIMARY KEY constraint on HarvestID.   (II)(a) UPDATE PLANTINGS SET FieldLocation='North Field 3' WHERE PlantingID='PL005';   (II)(b) SELECT * FROM HARVESTS WHERE YieldQuality='excellent';"
+2026,Computer Networks,Web Servers and Switching,Short-Answer,(I)(a) Define the term web server. (b) Write one difference between Circuit Switching and Packet Switching. OR (II) Differentiate between FTP and SMTP (any two points).,2,"(a) A web server is a computer/software system that stores, processes, and delivers web pages to clients over HTTP.   (b) Circuit switching reserves a dedicated path for the entire session before data transfer; packet switching splits data into independently-routed packets with no dedicated path, reassembled at the destination.   (II) FTP (File Transfer Protocol) is used to transfer files between a client and a server; SMTP (Simple Mail Transfer Protocol) is used to send/relay email between mail servers."
+2026,File Handling,Text Files,Short-Answer,"(a) Write Find_Pattern() reading LOGS.TXT, displaying all lines starting with ""ERROR"" (case-sensitive). OR (b) Write ContainsChar() reading DOCUMENT.TXT, displaying all words containing the letter 'o' (case-insensitive).",3,"(a) def Find_Pattern():
+    f = open(""LOGS.TXT"", ""r"")
+    for line in f:
+        if line.startswith(""ERROR""):
+            print(line, end='')
+    f.close()
+
+(b) def ContainsChar():
+    f = open(""DOCUMENT.TXT"", ""r"")
+    for word in f.read().split():
+        if 'o' in word.lower():
+            print(word)
+    f.close()"
+2026,Stacks,Stack Operations on Scored Data,Long-Answer,"EMPLOYEE_PERFORMANCE = {""E101"":85,...}. Write: PushHighPerformers() -- pushes employee IDs with score>=90 onto stack TOP_PERFORMERS_LIST. IsPerformanceListEmpty() -- returns True/False. PopPerformer() -- pops topmost, or prints ""Stack Underflow: No top performer to pop."" if empty.
+OR (b) PRODUCT_PRICES list; write PushDiscPrices() (push prices <=100 onto DISCOUNT_PRICES), PopDiscPrices() (pop/display last price or ""No More Discount Prices to Pop""), ShowDiscPrices() (display all LIFO order or ""Stack is Empty: No discount prices to show"").",3,"def PushHighPerformers():
+    for emp_id, score in EMPLOYEE_PERFORMANCE.items():
+        if score >= 90:
+            TOP_PERFORMERS_LIST.append(emp_id)
+
+def IsPerformanceListEmpty():
+    return len(TOP_PERFORMERS_LIST) == 0
+
+def PopPerformer():
+    if IsPerformanceListEmpty():
+        print(""Stack Underflow: No top performer to pop."")
+    else:
+        return TOP_PERFORMERS_LIST.pop()"
+2026,Python Functions,List Manipulation Trace,Output-Prediction,"Predict output: SCORES = [5,12,7,20,10,18]; for X in range(len(SCORES)): if SCORES[X]%4==0: SCORES[X]=SCORES[X]+SCORES[X-1]; elif SCORES[X]%3==0: SCORES[X]=SCORES[len(SCORES)-1-X]+5; else: SCORES[X]=SCORES[X]//2 ; then print pairs with sep=""$"".
+OR (b) def Transform(D_A,D_B): D_C={}; D_C.update(D_A); D_A.update(D_B); D_B.update(D_C); return D_C -- called with Init_Stock and New_Arriv dicts; print all three.",3,"(a) SCORES after transformation: [2, 14, 3, 23, 5, 7] -- printed as:
+2$14
+3$23
+5$7
+(b) Init_Stock: {'Chocolate': 120, 'Cookie': 60}
+New_Arriv: {'Cookie': 50, 'Chocolate': 100}
+T_Data: {'Chocolate': 100, 'Cookie': 50}
+(Both verified by direct execution.)"
+2026,SQL,Queries on Product Inventory,Long-Answer,"Table PRODUCTS(PID,PName,Category,Price,Quantity,LastUpdated) with 10 rows given (electronics/peripherals/etc). (a) Write SQL for: (I) PName,Price of Electronics with Price>100 (II) Category and count of products per category (III) full table ordered by LastUpdated ascending (IV) set Price=0 where Quantity is unknown (NULL).
+OR (b) Predict output of 4 given SELECT queries (AVG, DISTINCT, COUNT, LIKE).",4,"(a)(I) SELECT PName, Price FROM PRODUCTS WHERE Category='Electronics' AND Price>100.00;
+(a)(II) SELECT Category, COUNT(*) FROM PRODUCTS GROUP BY Category;
+(a)(III) SELECT * FROM PRODUCTS ORDER BY LastUpdated ASC;
+(a)(IV) UPDATE PRODUCTS SET Price=0 WHERE Quantity IS NULL;
+(b)(I) SELECT Avg(Quantity) FROM PRODUCTS WHERE Category='Peripherals'; -> average of 200,150,NULL(excluded),... = (200+150+NULL-excluded)/count of non-null rows
+(b)(II) SELECT DISTINCT Category -> Electronics, Peripherals, Accessories, Storage, Audio, Home
+(b)(III) SELECT COUNT(PID) WHERE Quantity<100 -> counts rows with Quantity<100 (NULL excluded by default)
+(b)(IV) SELECT PName,Category WHERE PName LIKE '%Speaker%' -> ('Smart Speaker','Electronics')
+(b) VERIFIED against the actual 10-row table: (I) AVG Quantity for Peripherals = 175.0  (II) DISTINCT Category = Electronics, Peripherals, Accessories, Storage, Audio, Home  (III) COUNT(PID) WHERE Quantity<100 = 2  (IV) PName,Category WHERE LIKE '%Speaker%' = ('Smart Speaker','Electronics')"
+2026,File Handling,CSV Orders,Long-Answer,"CSV ""ORDERS.CSV"" with [OrderID,CustomerID,OrderDate,TotalAmount,OrderStatus]. Write: (i) RecentOrders() -- display OrderID,TotalAmount for all orders placed in year 2024. (ii) AddOrder(newOrder) -- write a new record (passed as argument) to the end of the CSV file.",4,"import csv
+def RecentOrders():
+    with open(""ORDERS.CSV"", ""r"", newline="""") as f:
+        reader = csv.reader(f)
+        for row in reader:
+            if row[2].startswith(""2024""):
+                print(row[0], row[3])
+
+def AddOrder(newOrder):
+    with open(""ORDERS.CSV"", ""a"", newline="""") as f:
+        writer = csv.writer(f)
+        writer.writerow(newOrder)"
+2026,SQL,Joins -- Library Catalog,Long-Answer,"Database LIBRARY_CATALOG: PUBLISHERS(PublID,Name,Country,Genre) and BOOKS(BookID,Title,PID,PublID,PublYear,Pages). Write queries: (I)(a) Title+PublYear of Fiction-genre books via Equi Join OR (b) same via Natural Join. (II) Name of publishers + Title of their books, ascending PublYear. (III) Delete BOOKS records with PublYear older than 2020. (IV) Open the database and show all table names.",4,"(I)(a) SELECT B.Title, B.PublYear FROM BOOKS B, PUBLISHERS P WHERE B.PublID=P.PublID AND P.Genre='Fiction';
+(I)(b) SELECT Title, PublYear FROM BOOKS NATURAL JOIN PUBLISHERS WHERE Genre='Fiction';
+(II) SELECT P.Name, B.Title FROM PUBLISHERS P, BOOKS B WHERE P.PublID=B.PublID ORDER BY B.PublYear ASC;
+(III) DELETE FROM BOOKS WHERE PublYear < 2020;
+(IV) USE LIBRARY_CATALOG; SHOW TABLES;"
+2026,Python-SQL Connectivity,MySQL via Python,Long-Answer,"Table EQUITY in database INVESTMENT: Code CHAR(6), Name VARCHAR(15), Exchange CHAR(3), LTP FLOAT, Volume INT. Write a Python function to display all records where Exchange='BSE', and the total count. Connection: Host=localhost, User=Finman, Password=Stk2026.",4,"import mysql.connector as sql
+def ShowBSE():
+    conn = sql.connect(host=""localhost"", user=""Finman"", password=""Stk2026"", database=""INVESTMENT"")
+    cursor = conn.cursor()
+    cursor.execute(""SELECT * FROM EQUITY WHERE Exchange='BSE'"")
+    rows = cursor.fetchall()
+    for row in rows:
+        print(row)
+    print(""Total records:"", len(rows))
+    conn.close()"
+2026,File Handling,Binary Files -- Clinical Trials,Long-Answer,"Binary file CLINICAL_TRIALS.DAT stores [TRIAL_ID,PATIENT_NAME,DRUG_TESTED,DOSAGE_MG,OUTCOME_SCORE]. Write: (I) RecordTrialData() -- input participant data and write it to the file. (II) AdjustLowDosage() -- increase DOSAGE_MG by 20% for all participants with OUTCOME_SCORE < 0.5, rewriting the file.",5,"import pickle
+def RecordTrialData():
+    f = open(""CLINICAL_TRIALS.DAT"", ""ab"")
+    trial_id = input(""TRIAL_ID: "")
+    patient = input(""PATIENT_NAME: "")
+    drug = input(""DRUG_TESTED: "")
+    dosage = int(input(""DOSAGE_MG: ""))
+    outcome = float(input(""OUTCOME_SCORE: ""))
+    pickle.dump([trial_id, patient, drug, dosage, outcome], f)
+    f.close()
+
+def AdjustLowDosage():
+    records = []
+    f = open(""CLINICAL_TRIALS.DAT"", ""rb"")
+    try:
+        while True:
+            rec = pickle.load(f)
+            if rec[4] < 0.5:
+                rec[3] = int(rec[3] * 1.2)
+            records.append(rec)
+    except EOFError:
+        pass
+    f.close()
+    f = open(""CLINICAL_TRIALS.DAT"", ""wb"")
+    for rec in records:
+        pickle.dump(rec, f)
+    f.close()"
+2026,Computer Networks,Network Design Case Study,Case-Study,"Green Sprout Institute: HQ in Guwahati; new Kolkata Research Campus with 3 sections -- Advanced Labs(100 PCs), Data Analysis Centre(60 PCs), Administrative Hub(150 PCs); 4 remote field stations across Assam sending sensor data to Kolkata. Distances: Labs-DataCentre 280m, DataCentre-AdminHub 320m, AdminHub-Labs 250m. (I) device to connect PCs within each section. (II) best SERVER location among the 3 sections, justify. (III) cable layout diagram connecting the sections. (IV) network type (PAN/LAN/MAN/WAN) between Guwahati HQ and Kolkata campus. (V)(a) secure high-bandwidth wired medium for Guwahati-Kolkata data transfer OR (b) protocol for video-conferencing research sessions.",5,"(I) Switch (to connect individual computers/devices within each section).
+(II) Administrative Hub -- it has the most computers (150) and is the natural central administrative/security point; alternatively Advanced Labs could be argued for proximity to Data Analysis (280m) -- the standard justification is to place the server where the most devices and most critical/sensitive data processing occurs, typically Administrative Hub for oversight and Advanced Labs for research-data proximity; either is acceptable with sound justification, but Administrative Hub is the more common model-answer choice given its centrality in the distance table (250m to Labs, 320m to Data Centre -- roughly central).
+(III) Star or partial-mesh layout connecting all three sections (Labs-DataCentre, DataCentre-AdminHub, AdminHub-Labs), each internally using a switch.
+(IV) WAN (Wide Area Network) -- Guwahati and Kolkata are in different cities, geographically far apart.
+(V)(a) Optical Fiber -- secure, high-bandwidth, suitable for long-distance large-data transfer.
+(V)(b) VoIP (Voice over Internet Protocol), often implemented via SIP, for video conferencing."
