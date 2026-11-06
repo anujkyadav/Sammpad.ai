@@ -1,17 +1,28 @@
 """
 train_classifier.py
 --------------------
-Run this once (and again any time you expand data/processed/pyq_database.csv)
-to train the self-trained topic classifier.
+Run this once (and again after adding questions) to train and publish the
+self-trained topic classifier using the Neon question bank.
 
 Usage:
     python train_classifier.py
 """
 
-from pyq_engine import load_pyq_db
-from classifier import train_topic_classifier
+import os
+import sys
+from dotenv import load_dotenv
+
+SRC_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "src")
+if SRC_DIR not in sys.path:
+    sys.path.insert(0, SRC_DIR)
+load_dotenv(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env"))
+
+from saampad_ai.pyq_engine import load_pyq_db
+from saampad_ai.classifier import train_topic_classifier
+from saampad_ai.storage import initialize_storage
 
 if __name__ == "__main__":
+    initialize_storage()
     df = load_pyq_db()
     print(f"Training on {len(df)} questions across {df['topic'].nunique()} topics...")
 
@@ -21,7 +32,7 @@ if __name__ == "__main__":
     print(f"Test accuracy: {result['accuracy']:.2%}")
     print("\nClassification report:")
     print(result["report"])
-    print("\nModel saved to data/processed/topic_classifier.joblib")
+    print("\nModel saved to Neon Object Storage: models/topic_classifier.joblib")
     print("\nNOTE: Accuracy here is limited by how many examples exist PER TOPIC,")
     print("not just the total row count -- with 12+ topic classes, many still have")
     print("only 1-3 training examples each. This is EXPECTED and genuinely worth")

@@ -12,7 +12,7 @@ Supported providers: "groq", "gemini", "anthropic"
 
 import os
 
-from ai_config import PROVIDERS, env_key
+from .ai_config import PROVIDERS, env_key
 
 
 def get_ai_response(system_prompt: str, user_prompt: str,

@@ -16,7 +16,8 @@ Train it with:
 Then use predict_topic() anywhere in the app.
 """
 
-import os
+import io
+import math
 import joblib
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -25,7 +26,9 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, classification_report
 from sklearn.pipeline import Pipeline
 
-from paths import CLASSIFIER_PATH as MODEL_PATH
+from .storage import get_object_bytes, put_object, list_objects
+
+MODEL_OBJECT_KEY = "models/topic_classifier.joblib"
 
 
 def train_topic_classifier(df: pd.DataFrame, save: bool = True) -> dict:
@@ -34,19 +37,29 @@ def train_topic_classifier(df: pd.DataFrame, save: bool = True) -> dict:
     from `question_text`. Returns a small report dict so the app can
     display real accuracy numbers to evaluators -- not a canned claim.
     """
-    X = df["question_text"]
-    y = df["topic"]
+    required = {"question_text", "topic"}
+    if not required.issubset(df.columns):
+        raise ValueError("Classifier training data must include question_text and topic columns.")
+    clean = df.dropna(subset=["question_text", "topic"]).copy()
+    clean["question_text"] = clean["question_text"].astype(str).str.strip()
+    clean["topic"] = clean["topic"].astype(str).str.strip()
+    clean = clean[(clean["question_text"] != "") & (clean["topic"] != "")]
+    if len(clean) < 4 or clean["topic"].nunique() < 2:
+        raise ValueError("Need at least four labeled questions across two topics to train a classifier.")
 
-    # With a small demo dataset, stratified split can fail if a class
-    # has too few samples -- fall back to a plain split in that case.
-    try:
-        X_train, X_test, y_train, y_test = train_test_split(
-            X, y, test_size=0.25, random_state=42, stratify=y
-        )
-    except ValueError:
-        X_train, X_test, y_train, y_test = train_test_split(
-            X, y, test_size=0.25, random_state=42
-        )
+    X = clean["question_text"]
+    y = clean["topic"]
+    test_count = max(1, math.ceil(len(clean) * 0.25))
+    can_stratify = (
+        y.value_counts().min() >= 2
+        and test_count >= y.nunique()
+        and len(clean) - test_count >= y.nunique()
+    )
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=0.25, random_state=42, stratify=y if can_stratify else None
+    )
+    if y_train.nunique() < 2:
+        raise ValueError("The training split contains fewer than two topics. Add more labeled questions and retry.")
 
     pipeline = Pipeline([
         ("tfidf", TfidfVectorizer(ngram_range=(1, 2), min_df=1)),
@@ -59,8 +72,10 @@ def train_topic_classifier(df: pd.DataFrame, save: bool = True) -> dict:
     report = classification_report(y_test, y_pred, zero_division=0)
 
     if save:
-        os.makedirs(os.path.dirname(MODEL_PATH), exist_ok=True)
-        joblib.dump(pipeline, MODEL_PATH)
+        artifact = io.BytesIO()
+        joblib.dump(pipeline, artifact)
+        put_object(MODEL_OBJECT_KEY, artifact.getvalue(), original_name="topic_classifier.joblib",
+                   category="model", content_type="application/octet-stream")
 
     return {
         "accuracy": acc,
@@ -72,9 +87,9 @@ def train_topic_classifier(df: pd.DataFrame, save: bool = True) -> dict:
 
 
 def load_topic_classifier():
-    if not os.path.exists(MODEL_PATH):
+    if not any(item["object_key"] == MODEL_OBJECT_KEY for item in list_objects("model")):
         return None
-    return joblib.load(MODEL_PATH)
+    return joblib.load(io.BytesIO(get_object_bytes(MODEL_OBJECT_KEY)))
 
 
 def predict_topic(question_text: str) -> dict:
@@ -82,6 +97,8 @@ def predict_topic(question_text: str) -> dict:
     Predicts the likely topic of a new, freely pasted question using
     the self-trained model -- no AI/LLM call involved here at all.
     """
+    if not isinstance(question_text, str) or not question_text.strip():
+        return {"error": "Enter a non-empty question to classify."}
     model = load_topic_classifier()
     if model is None:
         return {"error": "Model not trained yet. Run: python train_classifier.py"}

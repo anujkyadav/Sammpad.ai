@@ -12,39 +12,19 @@ This directly reuses the Day 1 syllabus topic "Association Rules"
 Implemented directly with pandas/itertools (no extra ML dependency
 needed) so it is easy to install and easy to verify.
 
-IMPORTANT: data/processed/sample_session_logs.csv is SYNTHETIC demo data I
-generated to make this feature runnable out of the box. Replace it
-with real (anonymized) mistake logs once the app has been used by
-actual students -- see log_session_mistakes() below for how real
-sessions get appended over time.
+The initial sample sessions migrated to Neon are SYNTHETIC demo data.
+New quiz mistakes are written to Neon Postgres as anonymous session-level
+records and can be used alongside the starter examples.
 """
 
-import os
 import itertools
 import pandas as pd
 
-from paths import SESSION_LOG_PATH as LOG_PATH
+from .storage import load_session_logs, log_session_mistakes
 
 
-def load_session_logs() -> pd.DataFrame:
-    return pd.read_csv(LOG_PATH)
-
-
-def log_session_mistakes(student_session: str, topics_missed: list):
-    """
-    Appends a real session's missed topics to the log file, so the
-    association rules improve over time as real students use the app.
-    """
-    df = load_session_logs()
-    new_row = pd.DataFrame([{
-        "student_session": student_session,
-        "topics_missed": ",".join(topics_missed),
-    }])
-    updated = pd.concat([df, new_row], ignore_index=True)
-    updated.to_csv(LOG_PATH, index=False)
-
-
-def mine_topic_associations(min_support: float = 0.15, min_confidence: float = 0.5) -> pd.DataFrame:
+def mine_topic_associations(min_support: float = 0.15, min_confidence: float = 0.5,
+                            include_synthetic: bool = False) -> pd.DataFrame:
     """
     Returns 2-item association rules like:
         {Stacks} -> {SQL}   support=0.40  confidence=0.71  lift=1.30
@@ -56,7 +36,7 @@ def mine_topic_associations(min_support: float = 0.15, min_confidence: float = 0
     lift(A->B)       = confidence(A->B) / support(B)
                        (lift > 1 means A and B co-occur more than chance)
     """
-    df = load_session_logs()
+    df = load_session_logs(include_synthetic=include_synthetic)
     transactions = [set(row.split(",")) for row in df["topics_missed"]]
     n = len(transactions)
     if n == 0:

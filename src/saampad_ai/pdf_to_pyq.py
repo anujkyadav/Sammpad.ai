@@ -21,7 +21,8 @@ import json
 import re
 import pandas as pd
 
-from backend import get_ai_response
+from .backend import get_ai_response
+from .storage import upsert_questions
 
 REQUIRED_COLUMNS = ["year", "topic", "subtopic", "question_type", "question_text", "marks", "answer"]
 
@@ -110,16 +111,42 @@ def parse_chunk_with_ai(text_chunk: str, year: int, provider: str, api_key: str,
 
     try:
         rows = json.loads(cleaned)
-    except json.JSONDecodeError:
-        return []
+    except json.JSONDecodeError as exc:
+        raise ValueError("The AI could not return valid structured question data for one PDF section.") from exc
+    if not isinstance(rows, list):
+        raise ValueError("The AI response for a PDF section must be a JSON array of questions.")
 
-    for row in rows:
-        row["year"] = year
-        row.setdefault("subtopic", row.get("topic", ""))
-        row.setdefault("answer", "")
-        if row.get("question_type") not in VALID_QUESTION_TYPES:
-            row["question_type"] = "Short-Answer"
-    return rows
+    validated = []
+    for index, row in enumerate(rows, start=1):
+        if not isinstance(row, dict):
+            raise ValueError(f"Parsed question {index} is not a JSON object.")
+        topic = str(row.get("topic", "")).strip()
+        question_text = str(row.get("question_text", "")).strip()
+        question_type = str(row.get("question_type", "")).strip()
+        if not topic or not question_text:
+            raise ValueError(f"Parsed question {index} is missing its topic or question text.")
+        if question_type not in VALID_QUESTION_TYPES:
+            raise ValueError(f"Parsed question {index} has unsupported type '{question_type}'.")
+        marks = row.get("marks")
+        try:
+            numeric_marks = float(marks) if marks not in (None, "") else None
+            if numeric_marks is not None and not numeric_marks.is_integer():
+                raise ValueError
+            marks = int(numeric_marks) if numeric_marks is not None else None
+        except (TypeError, ValueError) as exc:
+            raise ValueError(f"Parsed question {index} has invalid marks.") from exc
+        if marks is not None and not 0 <= marks <= 100:
+            raise ValueError(f"Parsed question {index} marks must be between 0 and 100.")
+        validated.append({
+            "year": int(year),
+            "topic": topic,
+            "subtopic": str(row.get("subtopic") or topic).strip(),
+            "question_type": question_type,
+            "question_text": question_text,
+            "marks": marks,
+            "answer": str(row.get("answer") or "").strip(),
+        })
+    return validated
 
 
 def parse_pdf_to_dataframe(file_obj, year: int, provider: str, api_key: str,
@@ -146,28 +173,18 @@ def parse_pdf_to_dataframe(file_obj, year: int, provider: str, api_key: str,
     if not all_rows:
         return pd.DataFrame(columns=REQUIRED_COLUMNS)
 
-    df = pd.DataFrame(all_rows)
-    for col in REQUIRED_COLUMNS:
-        if col not in df.columns:
-            df[col] = ""
-    return df[REQUIRED_COLUMNS]
+    from .storage import validate_question_rows
+    df = pd.DataFrame(all_rows, columns=REQUIRED_COLUMNS)
+    return validate_question_rows(df)
 
 
 # ---------------------------------------------------------------------
 # Step 3: Merge reviewed rows into the real database (no AI, deterministic)
 # ---------------------------------------------------------------------
 
-def append_to_database(new_rows: pd.DataFrame, db_path: str) -> dict:
+def append_to_database(new_rows: pd.DataFrame, db_path: str | None = None) -> dict:
     """
     Appends reviewed/edited rows to the real pyq_database.csv,
     skipping exact duplicate question_text entries.
     """
-    existing = pd.read_csv(db_path)
-    before = len(existing)
-
-    combined = pd.concat([existing, new_rows[REQUIRED_COLUMNS]], ignore_index=True)
-    combined = combined.drop_duplicates(subset=["question_text"], keep="first")
-
-    combined.to_csv(db_path, index=False)
-    added = len(combined) - before
-    return {"added": added, "total": len(combined), "duplicates_skipped": len(new_rows) - added}
+    return upsert_questions(new_rows[REQUIRED_COLUMNS])

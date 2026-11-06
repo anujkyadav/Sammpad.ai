@@ -9,7 +9,8 @@ Replace SYLLABUS_TEXT below by loading your school's actual split-up
 PDF (see load_syllabus_from_pdf()).
 """
 
-import os
+from io import BytesIO
+import re
 
 # ---------------------------------------------------------------------
 # Fallback syllabus summary (replace with your real split-up PDF content)
@@ -45,16 +46,31 @@ def load_syllabus_from_pdf(pdf_path: str) -> str:
     return "\n".join(page.extract_text() or "" for page in reader.pages)
 
 
+def validate_syllabus_pdf(data: bytes) -> str:
+    """Extract and validate a readable Class 11/12 Computer Science syllabus PDF."""
+    if not isinstance(data, bytes) or not data.startswith(b"%PDF-"):
+        raise ValueError("The selected file is not a valid PDF.")
+    from pypdf import PdfReader
+    try:
+        reader = PdfReader(BytesIO(data), strict=True)
+        text = "\n".join(page.extract_text() or "" for page in reader.pages).strip()
+    except Exception as exc:
+        raise ValueError("The PDF could not be read. Re-export it and try again.") from exc
+    normalized = re.sub(r"\s+", " ", text.lower())
+    has_class_11 = bool(re.search(r"\bclass\s*(?:xi|11)(?:\b|th\b)", normalized))
+    has_class_12 = bool(re.search(r"\bclass\s*(?:xii|12)(?:\b|th\b)", normalized))
+    if not text or "computer science" not in normalized or not (has_class_11 and has_class_12):
+        raise ValueError("Choose a readable Computer Science syllabus that explicitly covers both Class 11 and Class 12.")
+    return text
+
+
 def get_syllabus_text() -> str:
-    """
-    Looks for a local split-up PDF first (data/syllabus.pdf); falls back
-    to the built-in summary above if not found.
-    """
-    from paths import SYLLABUS_PDF_DIR, latest_pdf
-    pdf_path = latest_pdf(SYLLABUS_PDF_DIR)   # newest PDF in data/raw_pdfs/syllabus/
-    if pdf_path:
+    """Load the explicitly selected cloud syllabus or the built-in fallback."""
+    from .storage import get_active_syllabus_key, get_object_bytes
+    active_key = get_active_syllabus_key()
+    if active_key:
         try:
-            return load_syllabus_from_pdf(pdf_path)
+            return validate_syllabus_pdf(get_object_bytes(active_key))
         except Exception:
             pass
     return DEFAULT_SYLLABUS_TEXT

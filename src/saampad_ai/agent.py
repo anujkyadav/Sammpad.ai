@@ -29,9 +29,9 @@ the app displays -- this is what makes it demonstrably an agent
 import re
 from collections import defaultdict
 
-from pyq_engine import get_exact_pyq, generate_similar_question
-from association_rules import mine_topic_associations
-from sandbox import run_code
+from .pyq_engine import get_exact_pyq, generate_similar_question
+from .association_rules import mine_topic_associations
+from .sandbox import run_code
 
 
 def analyze_weak_topic(session_history: list[dict]) -> dict:
@@ -85,7 +85,7 @@ def find_linked_topic(weak_topic: str) -> dict:
 _CODE_BLOCK_RE = re.compile(r"```(?:python)?\s*(.*?)```", re.DOTALL)
 
 
-def verify_generated_question(question: dict) -> dict:
+def verify_generated_question(question: dict, session_id: str | None = None) -> dict:
     """
     Step 4. If the generated question contains a fenced Python code
     block, actually RUN it and compare the real output to the AI's
@@ -103,24 +103,30 @@ def verify_generated_question(question: dict) -> dict:
     if "print(" not in code:
         return {**question, "verified": None, "verification_note": "Code has no print() -- nothing to verify against."}
 
-    result = run_code(code, timeout_seconds=5)
+    result = run_code(code, timeout_seconds=5, session_id=session_id)
     actual_output = result["output"].strip()
     claimed_answer = str(question.get("correct_answer", "")).strip()
+
+    if result["status"] == "disabled":
+        return {**question, "verified": None, "verification_note": result["output"]}
+    if result["status"] != "ok":
+        return {**question, "verified": None,
+                "verification_note": "This answer couldn't be automatically checked. Please review it."}
 
     matches = actual_output != "" and actual_output in claimed_answer or claimed_answer in actual_output
     return {
         **question,
-        "verified": bool(matches) if result["status"] == "ok" else False,
+        "verified": bool(matches),
         "verification_note": (
-            f"Executed code -> actual output: '{actual_output}' vs claimed answer: '{claimed_answer}' "
-            f"-- {'MATCH' if matches else 'MISMATCH (flagged for teacher review, not shown as confirmed-correct)'}"
-            if result["status"] == "ok" else f"Code failed to run: {actual_output}"
+            "The generated answer matches the code output."
+            if matches else "The generated answer doesn't match the code output and needs review."
         ),
     }
 
 
 def run_smart_practice_agent(session_history: list[dict], pyq_df, provider: str, api_key: str,
-                              prefer_generated: bool = True, model: str = None) -> dict:
+                              prefer_generated: bool = True, model: str = None,
+                              session_id: str | None = None) -> dict:
     """
     The full orchestrated pipeline. Returns a trace (for the UI to
     show "how the agent decided") plus the final verified question set.
@@ -139,12 +145,16 @@ def run_smart_practice_agent(session_history: list[dict], pyq_df, provider: str,
 
     # Step 3
     questions = []
+    generation_errors = []
     for topic in topics_to_cover:
         qtype = pyq_df[pyq_df["topic"] == topic]["question_type"].mode()
         qtype = qtype.iloc[0] if not qtype.empty else "MCQ"
 
         if prefer_generated and api_key:
             q = generate_similar_question(pyq_df, topic, qtype, provider=provider, api_key=api_key, model=model)
+            if q.get("error"):
+                generation_errors.append(f"{topic}: {q['error']}")
+                continue
             q["topic"] = topic
             q["source"] = "AI-generated (few-shot, grounded in real PYQs)"
         else:
@@ -156,10 +166,13 @@ def run_smart_practice_agent(session_history: list[dict], pyq_df, provider: str,
                  "explanation": f"Original CBSE PYQ, {row['year']}", "topic": topic,
                  "source": "Exact PYQ (retrieved, not generated)"}
         questions.append(q)
-    trace.append({"step": "3. Retrieve/generate questions", "detail": f"Prepared {len(questions)} question(s) for topics: {', '.join(topics_to_cover)}"})
+    step_detail = f"Prepared {len(questions)} question(s) for topics: {', '.join(topics_to_cover)}"
+    if generation_errors:
+        step_detail += " Some questions couldn't be generated."
+    trace.append({"step": "3. Retrieve/generate questions", "detail": step_detail})
 
     # Step 4
-    verified_questions = [verify_generated_question(q) for q in questions]
+    verified_questions = [verify_generated_question(q, session_id=session_id) for q in questions]
     verified_count = sum(1 for q in verified_questions if q.get("verified") is True)
     flagged_count = sum(1 for q in verified_questions if q.get("verified") is False)
     trace.append({"step": "4. Verify code-based answers (sandbox execution)",

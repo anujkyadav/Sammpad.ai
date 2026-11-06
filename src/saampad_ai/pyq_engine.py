@@ -11,14 +11,13 @@ Three capabilities, as described in the capstone report:
 6. audit_coverage()           -> simple bias/coverage audit over the PYQ bank
 """
 
-import os
 import json
+import re
 import pandas as pd
 import numpy as np
 
-from backend import get_ai_response
-
-from paths import PYQ_DB_PATH as DATA_PATH
+from .backend import get_ai_response
+from .storage import load_questions
 
 
 # ---------------------------------------------------------------------
@@ -26,7 +25,7 @@ from paths import PYQ_DB_PATH as DATA_PATH
 # ---------------------------------------------------------------------
 
 def load_pyq_db() -> pd.DataFrame:
-    return pd.read_csv(DATA_PATH)
+    return load_questions()
 
 
 # ---------------------------------------------------------------------
@@ -37,7 +36,7 @@ def get_exact_pyq(df: pd.DataFrame, topic: str = None, question_type: str = None
                    year: int = None, n: int = 5) -> pd.DataFrame:
     result = df.copy()
     if topic:
-        result = result[result["topic"].str.contains(topic, case=False, na=False)]
+        result = result[result["topic"].str.contains(topic, case=False, na=False, regex=False)]
     if question_type:
         result = result[result["question_type"].str.lower() == question_type.lower()]
     if year:
@@ -78,11 +77,28 @@ Now generate ONE new question of the same type, topic, and difficulty."""
 
     raw = get_ai_response(system_prompt, user_prompt, provider=provider, api_key=api_key, model=model)
 
+    cleaned = raw.strip()
+    if cleaned.startswith("```"):
+        cleaned = re.sub(r"^```(?:json)?\s*", "", cleaned, flags=re.IGNORECASE)
+        cleaned = re.sub(r"\s*```$", "", cleaned)
     try:
-        cleaned = raw.strip().strip("`").replace("json\n", "", 1)
-        return json.loads(cleaned)
-    except Exception:
-        return {"question": raw, "options": [], "correct_answer": "", "explanation": "(raw model output -- JSON parse failed)"}
+        payload = json.loads(cleaned)
+    except json.JSONDecodeError:
+        return {"error": "The AI response was not valid JSON. Try generating the question again."}
+    if not isinstance(payload, dict):
+        return {"error": "The AI response did not contain a question object."}
+    question = payload.get("question")
+    options = payload.get("options", [])
+    answer = payload.get("correct_answer", "")
+    explanation = payload.get("explanation", "")
+    if not isinstance(question, str) or not question.strip():
+        return {"error": "The AI response did not include question text."}
+    if not isinstance(options, list) or not all(isinstance(option, str) for option in options):
+        return {"error": "The AI response included invalid answer options."}
+    if not isinstance(answer, str) or not isinstance(explanation, str):
+        return {"error": "The AI response included an invalid answer or explanation."}
+    return {"question": question.strip(), "options": options,
+            "correct_answer": answer.strip(), "explanation": explanation.strip()}
 
 
 # ---------------------------------------------------------------------
@@ -107,6 +123,10 @@ def embed_questions(df: pd.DataFrame) -> np.ndarray:
 
 def cluster_questions(df: pd.DataFrame, n_clusters: int = 4) -> pd.DataFrame:
     """Adds a 'cluster' column grouping questions by semantic similarity."""
+    if len(df) < 2:
+        raise ValueError("Semantic clustering needs at least two questions.")
+    if n_clusters < 1:
+        raise ValueError("The number of clusters must be positive.")
     from sklearn.cluster import KMeans
     embeddings = embed_questions(df)
     n_clusters = min(n_clusters, len(df))
@@ -118,6 +138,10 @@ def cluster_questions(df: pd.DataFrame, n_clusters: int = 4) -> pd.DataFrame:
 
 
 def find_similar_questions(df: pd.DataFrame, query_text: str, top_n: int = 3) -> pd.DataFrame:
+    if df.empty:
+        return df.assign(similarity=pd.Series(dtype=float))
+    if top_n < 1:
+        return df.head(0).assign(similarity=pd.Series(dtype=float))
     from sklearn.metrics.pairwise import cosine_similarity
     model = _get_embedder()
     all_embeddings = embed_questions(df)
@@ -130,6 +154,8 @@ def find_similar_questions(df: pd.DataFrame, query_text: str, top_n: int = 3) ->
 
 def get_cluster_plot_data(df: pd.DataFrame, n_clusters: int = 4):
     """2D PCA projection of clusters, for plotting in the app."""
+    if len(df) < 2:
+        raise ValueError("A 2D cluster plot needs at least two questions.")
     from sklearn.decomposition import PCA
     clustered = cluster_questions(df, n_clusters=n_clusters)
     embeddings = embed_questions(df)
